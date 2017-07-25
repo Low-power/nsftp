@@ -1,0 +1,20 @@
+# Not Secure File Transfer Protocol
+
+service nsftp {
+	disable		= no
+
+	id		= nsftp
+	type		= UNLISTED
+	wait		= no
+	socket_type	= stream
+	#protocol	= # socket type is usually enough
+	port		= 2122
+
+	#user		= root
+	user		= sftp
+	group		= ftp
+	server		= /usr/lib/openssh/sftp-server
+	# See sftp-server(8) for more options
+	# hint: use -R for read only share
+	server_args	= -f DAEMON -l VERBOSE
+}
