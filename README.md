@@ -1,10 +1,12 @@
 Use the Secure File Transfer Protocol, originally a sub-protocol of the Secure Shell (SSH) protocol, as a standalone protocol that established directly on TCP instead of SSH.
-This FTP server / client is really simple, doesn't have any encryption and authentication stuff.
+
+This FTP server / client is really simple; it doesn't have any encryption and authentication stuff.
+
 Based on the SFTP implementation in OpenSSH, specifically sftp(1) and sftp-server(8).
 
 ## Dependencies
 Server depends on xinetd(8) and sftp-server(8) (OpenSSH).
-Client depends on nc(1) and ssh(1) (OpenSSH).
+Client depends on nc(1) and sftp(1) (OpenSSH).
 
 ## Usage
 Setup the server by deploy the provided xinetd configuration file, modify it to fit your needs, then restart xinetd.
