@@ -11,3 +11,5 @@ Client depends on nc(1) and sftp(1) (OpenSSH).
 ## Usage
 Setup the server by deploy the provided xinetd configuration file, modify it to fit your needs, then restart xinetd.
 In the client, deploy file `sftp-ssh-to-nc.sh` to some where you could easily find or under the PATH; connect to server using `sftp -S <path/to/sftp-ssh-to-nc.sh> [-P <port>] <server-address>`.
+
+Alternately, the `sshfs(1)` can also be used as client; mounting from the nsftp server is possible via `sshfs <server-address>:<path> <mount-point> -o directport=<port>`.
