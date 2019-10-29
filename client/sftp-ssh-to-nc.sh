@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # ssh(1) to nc(1) wrapper for nsftp
-# Copyright 2015-2017 Rivoreo
+# Copyright 2015-2019 Rivoreo
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -24,21 +24,19 @@
 
 port=2122
 verbose=0
-#options=
 while getopts "1246ab:c:e:fgi:kl:m:no:p:qstvxACD:F:I:KL:MNO:PR:S:TVw:W:XYy" c
 do case $c in
 	p)
 		port="$OPTARG"
 		;;
 	o)
-		#options="`echo \"$OPTARG\" | "
-		[ -z "`echo \"$OPTARG\" | sed 's/[[:space:]]//g'`" ] && continue
-		if ! echo "$OPTARG" | grep -Eq '^[0-9A-Za-z]+(=|[[:space:]])[0-9A-Za-z_,./]+$'; then
-			echo "Bad configuration option: $OPTARG" 1>&2
+		[ -z "`printf %s \"$OPTARG\" | sed 's/[[:space:]]//g'`" ] && continue
+		if ! printf %s\\n "$OPTARG" | grep -Eq '^[0-9A-Za-z]+(=|[[:space:]])[0-9A-Za-z_,./]+$'; then
+			printf "Bad configuration option: %s\\n" "$OPTARG" 1>&2
 			exit 255
 		fi
-		key="`echo \"$OPTARG\" | sed -r 's/(=|[[:space:]])[0-9A-Za-z_,./]+//' | sed y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/`"
-		value="`echo \"$OPTARG\" | sed -r 's/[0-9A-Za-z]+(=|[[:space:]])//'`"
+		key="`printf %s \"$OPTARG\" | sed -r 's/(=|[[:space:]])[0-9A-Za-z_,./]+//' | sed y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/`"
+		value="`printf %s \"$OPTARG\" | sed -r 's/[0-9A-Za-z]+(=|[[:space:]])//'`"
 		eval "$key=$value" 1>&2
 		;;
 	v)
@@ -54,14 +52,11 @@ do case $c in
 		exit 255
 		;;
 esac done
-eval "$options"
 shift $((OPTIND-1))
 if [ $# -lt 1 ]; then
 	echo "Need a host to connect"
 	exit 1
 fi
-#[ $verbose -gt 0 ] && echo "Connecting to $1:$port" 1>&2
-[ $verbose -gt 1 ] && echo "Connecting to [$1]:$port" 1>&2
 if [ -n "$loglevel" ] && [ "$verbose" = 0 ]
 then case "`printf %s \"$loglevel\" | sed y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/`" in
 	quiet)
@@ -82,6 +77,7 @@ then case "`printf %s \"$loglevel\" | sed y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghi
 		printf "unsupported log level '%s'\\n" "$loglevel" 1>&2
 		exit 255
 esac fi
+[ $verbose -gt 1 ] && echo "Connecting to [$1]:$port" 1>&2
 opt_v=
 while [ $verbose -gt 0 ]; do
 	opt_v="$opt_v -v"
